@@ -1,0 +1,138 @@
+<?php 
+	session_start ();
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Home</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="css/layout.css">
+		<link rel="stylesheet" type="text/css" href="css/menu.css">
+        <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+    </head>
+    <body>
+        <div id="principal">
+			<div id="topo">
+				<div id="logo">
+					<h1> Shoes Store </h1>
+					<h4> Controle de Vendas </h4>
+				</div>
+				<div class="menu_global">
+					<ul>
+                        <li> Olá <?php include "validar_login.php";?></li>
+						<li><a href="logout.php" class="active">Sair</a></li>                        
+                    </ul>                
+				</div>
+			</div>
+			<div id="conteudo_especifico">
+				<div class="div_central centralizar">
+					<h1> ALTERAÇÃO DE PRODUTOS </h1>
+				</div>
+				<div class="div_esquerda menu_local">					
+					<?php
+
+						include "menu.php";
+					
+					?>
+				</div>		
+				<div id="funcionalidade" class="div_direita">
+					<?php
+						$conectar = mysqli_connect ("localhost", "root", "", "shoes-store");
+						
+						$cod = $_GET["codigo"];
+										
+						$sql_pesquisa = "SELECT  cod_prod, marca_prod, modelo_prod, tipo_prod, valor_prod, foto_prod
+										FROM produtos
+										 WHERE cod_prod = '$cod'";
+						$resultado_pesquisa = mysqli_query ($conectar, $sql_pesquisa);	
+						
+						$registro = mysqli_fetch_row($resultado_pesquisa);
+					?>
+					<form method="post" action="processa_altera_prod.php">
+						<input type="hidden" name="codigo" value="<?php echo "$cod"; ?>">
+						<table class="centralizar">	
+							<tr>
+								<td>
+									<p> Marca: </p>
+								</td>
+								<td>
+									<p> <input type="text" name="marca" required value="<?php echo "$registro[1]"; ?>" > </p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p> Modelo: </p>
+								</td>
+								<td> 
+									<p> <input type="text" name="modelo" required value="<?php echo "$registro[2]"; ?>"> </p>
+								</td>								
+							</tr>
+							<tr>
+								<td> 
+									<p> Preço: </p>
+								</td>
+								<td>
+									<p> <input type="text" name="preco" required value="<?php echo "$registro[4]"; ?>"> </p>
+								</td>
+							</tr>
+							<tr>
+								<td> 
+									<p> Foto: </p>
+								</td>
+								<td>
+									<p> <input type="file" name = "foto"> </p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p> Tipo:  </p>
+								</td>
+								<td>
+									<p>
+										<select name="tipo">
+											<option value="tenis"
+												<?php
+														if ($registro[3] == "tenis") {
+															echo "selected";
+														}
+													?>
+												> Tênis </option>
+											<option value="bota"
+												<?php
+														if ($registro[3] == "bota") {
+															echo "selected";
+														}
+													?>
+											> Bota </option>
+											<option value="sapato"
+												<?php
+														if ($registro[3] == "sapato") {
+															echo "selected";
+														}
+													?> 
+											> Sapato </option>
+										</select>
+									</p>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<p> <input type="submit" value="Alterar Produto"> </p>
+								</td>
+							</tr>
+						</table>
+					</form>
+				</div>				
+			</div>	
+			<div id="rodape">
+				<div id="texto_institucional">
+					<div id="texto_institucional">
+                    <h6> Shoes Stroe </h6> 
+						<h6> Rua Almeida, 69 -- E-mail: ShoesStore@gmail.com -- Fone: (61) 9123 - 6677 </h6> 
+					</div> 
+				</div>
+		</div>
+    </body>
+</html>
